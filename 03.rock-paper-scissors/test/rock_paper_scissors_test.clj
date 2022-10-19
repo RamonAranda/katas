@@ -9,12 +9,12 @@
                   "Paper" "Paper"
                   "Rock" "Rock"))
   (testing "Player 1 beats Player 2"
-    (are [player1 player2] (= "Player 1 wins!" (rock-paper-scissors-game player1 player2))
+    (are [player1 player2] (= "Player 1 won!" (rock-paper-scissors-game player1 player2))
                   "Scissors" "Paper"
                   "Paper" "Rock"
                   "Rock" "Scissors"))
   (testing "Player 2 beats Player 1"
-    (are [player1 player2] (= "Player 2 wins!" (rock-paper-scissors-game player1 player2))
+    (are [player1 player2] (= "Player 2 won!" (rock-paper-scissors-game player1 player2))
                   "Paper" "Scissors"
                   "Rock" "Paper"
                   "Scissors" "Rock")))
