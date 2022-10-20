@@ -28,7 +28,10 @@
 (defn reduce-score
   [number amount accumulated]
   (if (>= amount 3)
-    (reduce-score number (- amount 3) (+ accumulated (get triplet-rewards number)))
+    (->>
+      (get triplet-rewards number)
+      (+ accumulated)
+      (reduce-score number (- amount 3)))
     (->>
       amount
       (* (single-number-score number))
