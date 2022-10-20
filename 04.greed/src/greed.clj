@@ -11,11 +11,11 @@
 ;  )
 
 (def rewards
-  {
-   :1 100
-   :5 50
+  {:1        100
+   :5        50
    :straight 1200
-   :pairs 800
+   :pairs    800
+   :no-score 0
    })
 
 (def triplet-rewards
@@ -37,7 +37,7 @@
   (cond
     (== number 1) (get rewards :1)
     (== number 5) (get rewards :5)
-    :else 0))
+    :else (get rewards :no-score)))
 
 (defn calculate-score-for-number
   [number amount]
@@ -64,7 +64,7 @@
 
 (defn calculate-pair-score
   [grouped-numbers]
-  (if (= (amount-of-pairs grouped-numbers) 3) (get rewards :pairs) 0))
+  (if (= (amount-of-pairs grouped-numbers) 3) (get rewards :pairs) (get rewards :no-score)))
 
 
 (defn is-straight
@@ -76,7 +76,7 @@
 
 (defn calculate-straight-score
   [dices]
-  (if (is-straight dices) (get rewards :straight) 0))
+  (if (is-straight dices) (get rewards :straight) (get rewards :no-score)))
 
 (defn greed-game
   [dices]
