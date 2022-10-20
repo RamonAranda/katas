@@ -10,13 +10,34 @@
 ;    )
 ;  )
 
+(def triplet-rewards
+  {1 1000
+   2 200
+   3 300
+   4 400
+   5 500
+   6 600})
+
+(defn single-number-score
+  [number]
+  (cond
+    (== number 1) 100
+    (== number 5) 50
+    :else 0))
+
+(defn reduce-score
+  [number amount accumulated]
+  (if (>= amount 3)
+    (reduce-score number (- amount 3) (+ accumulated (get triplet-rewards number)))
+    (->>
+      amount
+      (* (single-number-score number))
+      (+ accumulated))))
+
 (defn greed-game
   [dices]
-  (let [grouped-values (frequencies dices)
-        contains-1 (contains? grouped-values 1)
-        contains-5 (contains? grouped-values 5)]
-    (cond
-      (and contains-5 contains-1) 150
-      contains-5 50
-      contains-1 100
-      :else 0)))
+  (->>
+    (frequencies dices)
+    (map (fn [[key value]] (reduce-score key value 0)))
+    (reduce +)
+    ))
