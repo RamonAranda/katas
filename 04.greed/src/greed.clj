@@ -10,6 +10,14 @@
 ;    )
 ;  )
 
+(def rewards
+  {
+   :1 100
+   :5 50
+   :straight 1200
+   :pairs 800
+   })
+
 (def triplet-rewards
   {1 1000
    2 200
@@ -18,29 +26,66 @@
    5 500
    6 600})
 
+(def reward-multipliers
+  {3 1
+   4 2
+   5 4
+   6 8})
+
 (defn single-number-score
   [number]
   (cond
-    (== number 1) 100
-    (== number 5) 50
+    (== number 1) (get rewards :1)
+    (== number 5) (get rewards :5)
     :else 0))
 
-(defn reduce-score
-  [number amount accumulated]
+(defn calculate-score-for-number
+  [number amount]
   (if (>= amount 3)
     (->>
       (get triplet-rewards number)
-      (+ accumulated)
-      (reduce-score number (- amount 3)))
-    (->>
-      amount
-      (* (single-number-score number))
-      (+ accumulated))))
+      (* (get reward-multipliers amount)))
+    (* (single-number-score number) amount)))
+
+(defn calculate-scores-for-all-numbers
+  [grouped-numbers]
+  (->>
+    grouped-numbers
+    (map (fn [[key value]] (calculate-score-for-number key value)))
+    (reduce +)))
+
+(defn amount-of-pairs
+  [grouped-numbers]
+  (->>
+    (vals grouped-numbers)
+    (filter #(= % 2))
+    (count)
+    ))
+
+(defn calculate-pair-score
+  [grouped-numbers]
+  (if (= (amount-of-pairs grouped-numbers) 3) (get rewards :pairs) 0))
+
+
+(defn is-straight
+  [dices]
+  (let [dice-count (count dices)
+        first-value (first dices)
+        straight (doall (range first-value (+ first-value dice-count)))]
+    (= dices straight)))
+
+(defn calculate-straight-score
+  [dices]
+  (if (is-straight dices) (get rewards :straight) 0))
 
 (defn greed-game
   [dices]
-  (->>
-    (frequencies dices)
-    (map (fn [[key value]] (reduce-score key value 0)))
-    (reduce +)
-    ))
+  (let [grouped-numbers (frequencies dices)
+        single-number-scores (calculate-scores-for-all-numbers grouped-numbers)
+        pair-score (calculate-pair-score grouped-numbers)
+        straight-score (calculate-straight-score dices)]
+    (cond
+      (> pair-score 0) pair-score
+      (> straight-score 0) straight-score
+      :else single-number-scores))
+  )
