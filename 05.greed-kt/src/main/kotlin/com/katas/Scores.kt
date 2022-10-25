@@ -30,4 +30,7 @@ object Scores {
     )
 
     fun multiplierForNOfAKind(amount: Int) = multipliersForNOfAKind.getOrElse(amount) { return 1 }
+
+    val pairScore = Score(800)
+    val noScore = Score(0)
 }

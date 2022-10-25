@@ -90,4 +90,9 @@ class GreedTest : StringSpec({
         greedGame(dices(6, 6, 6, 6, 6)) shouldBe Score(2400)
         greedGame(dices(6, 6, 6, 6, 6, 6)) shouldBe Score(4800)
     }
+    "Scores three pairs" {
+        greedGame(dices(1, 1, 2, 2, 3, 3)) shouldBe Score(800)
+        greedGame(dices(1, 1, 2, 2, 5, 5)) shouldBe Score(800)
+        greedGame(dices(4, 4, 2, 2, 3, 3)) shouldBe Score(800)
+    }
 })
