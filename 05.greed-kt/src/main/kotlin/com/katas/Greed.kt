@@ -18,7 +18,13 @@ private fun calculateSingleValueScore(dices: Map<Dice, Int>): Score =
 
 private fun calculatePairScore(dices: Map<Dice, Int>): Score {
     val amountOfPairs = dices.filterValues { it == 2 }.count()
-    return if (amountOfPairs == 3) Scores.pairScore else Scores.noScore
+    return if (amountOfPairs == 3) Scores.pair else Scores.noScore
+}
+
+private fun calculateStraightScore(dices: Map<Dice, Int>): Score {
+    val sortedDices = dices.keys.sortedBy { it }
+    val rangeOfDices = sortedDices.first()..sortedDices.last()
+    return if (sortedDices.size >= 4 && sortedDices == rangeOfDices) Scores.straight else Scores.noScore
 }
 
 fun greedGame(dices: List<Dice>): Score {
@@ -26,8 +32,10 @@ fun greedGame(dices: List<Dice>): Score {
     val tripletScore = calculateNOfAKindScore(groupedDicesByValue)
     val singleValueScore = calculateSingleValueScore(groupedDicesByValue)
     val pairScore = calculatePairScore(groupedDicesByValue)
+    val straightScore = calculateStraightScore(groupedDicesByValue)
     return when {
         pairScore != Scores.noScore -> pairScore
+        straightScore != Scores.noScore -> straightScore
         else -> tripletScore + singleValueScore
     }
 }

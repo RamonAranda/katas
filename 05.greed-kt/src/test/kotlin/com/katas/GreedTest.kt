@@ -3,7 +3,7 @@ package com.katas
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 
-private fun dices(vararg dices: Int): List<Dice> = dices.map { Dice(it) }
+private fun dices(vararg dices: Int): List<Dice> = dices.map(::Dice)
 
 class GreedTest : StringSpec({
     "Accepts any amount of dices from 1 to 6" {
@@ -16,7 +16,7 @@ class GreedTest : StringSpec({
     }
     "Scores 50 if any dice is a 5" {
         greedGame(dices(5)) shouldBe Score(50)
-        greedGame(dices(5, 2, 3, 4, 6)) shouldBe Score(50)
+        greedGame(dices(5, 2, 3, 6)) shouldBe Score(50)
     }
     "Scores 100 if any dice is a 1" {
         greedGame(dices(1)) shouldBe Score(100)
@@ -94,5 +94,10 @@ class GreedTest : StringSpec({
         greedGame(dices(1, 1, 2, 2, 3, 3)) shouldBe Score(800)
         greedGame(dices(1, 1, 2, 2, 5, 5)) shouldBe Score(800)
         greedGame(dices(4, 4, 2, 2, 3, 3)) shouldBe Score(800)
+    }
+    "Scores a straight" {
+        greedGame(dices(1, 2, 3, 4)) shouldBe Score(1200)
+        greedGame(dices(1, 2, 3, 4, 5)) shouldBe Score(1200)
+        greedGame(dices(1, 2, 3, 4, 5, 6)) shouldBe Score(1200)
     }
 })
