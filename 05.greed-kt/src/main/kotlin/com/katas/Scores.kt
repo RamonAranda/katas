@@ -22,4 +22,12 @@ object Scores {
     )
 
     fun tripletScoreFor(value: Dice) = tripletScore[value]!!
+
+    private val multipliersForNOfAKind = mapOf(
+        4 to 2,
+        5 to 4,
+        6 to 8
+    )
+
+    fun multiplierForNOfAKind(amount: Int) = multipliersForNOfAKind.getOrElse(amount) { return 1 }
 }
